@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mura · VR Emotional Care</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b0b0f;    
+  --fg:#ffffff;       
+  --acc:#6c63ff;     
+}
+
+/* ===== Base */
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--fg);
+  background:#000;
+}
+
+/* ===== Top Nav */
+.nav{
+  position:fixed; inset:0 0 auto;
+  display:flex; gap:28px; align-items:center;
+  padding:20px 40px; z-index:10;
+  backdrop-filter:saturate(1.1) blur(6px);
+}
+.nav a{color:#fff; text-decoration:none; opacity:.92}
+.nav a:hover{opacity:1}
+.brand{font-weight:800; letter-spacing:.3px; font-size:28px}
+.nav .sp{flex:1}
+
+/* ===== Hero */
+.hero{
+  min-height:100vh; display:grid; place-items:center;
+  position:relative; text-align:center; padding:0 6vw; overflow:hidden;
+}
+.hero:before{
+  content:""; position:absolute; inset:0;
+  background:
+    linear-gradient(180deg,#06070b99 0%,#06070bcc 60%,#06070be0 100%),
+    url("assets/hero.jpg") center/cover no-repeat;
+  filter:saturate(.9);
+}
+.hero>*{position:relative}
+.kicker{letter-spacing:.12em; text-transform:uppercase; opacity:.8; font-size:13px}
+.h1{margin:.3rem 0; font-size:clamp(42px,8vw,88px); line-height:1.06; font-weight:800}
+.h1 .dot{color:var(--acc)}
+.lead{font-size:clamp(16px,2.6vw,22px); opacity:.95; max-width:950px; margin:14px auto 4px}
+.btn{
+  display:inline-block; margin-top:22px; padding:14px 28px; border-radius:999px;
+  background:var(--acc); color:#fff; font-weight:600; text-decoration:none;
+  box-shadow:0 10px 28px #6c63ff55;
+}
+
+/* ===== Sections (shared) */
+.section{padding:80px 6vw}
+
+/* ===== About (light text for dark bg) */
+.about-row{
+  display:grid; grid-template-columns:1.1fr 1fr;
+  gap:48px; align-items:center; margin:56px 0;
+}
+.about-row.rev{grid-template-columns:1fr 1.1fr}
+
+.kicker.lined{
+  position:relative; display:inline-block; padding-right:120px;
+  color:#cfcfcf; opacity:.95; letter-spacing:.16em; font-size:12px; margin:0 0 6px;
+}
+.kicker.lined:after{
+  content:""; position:absolute; left:calc(30% + 12px); top:50%;
+  height:2px; width:108px; background:var(--acc); transform:translateY(-50%);
+}
+
+.about-title{
+  font-size:clamp(28px,4.2vw,44px); margin:0 0 14px;
+  color:#ffffff; font-weight:800;
+}
+.about-text p{
+  color:#e6e6e6; line-height:1.7; margin:0;
+}
+
+.about-media img{
+  width:100%; height:auto; display:block; object-fit:cover;
+  border-radius:18px; box-shadow:0 12px 40px rgba(0,0,0,.35);
+}
+
+/* ===== Responsive */
+@media (max-width:980px){
+  .about-row,.about-row.rev{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .nav{padding:16px 20px}
+  .nav .hide-sm{display:none}
+  .section{padding:64px 5vw}
+  .about-row{gap:28px}
+}
+/* ===== Section headings (shared) */
+.section-head{max-width:960px;margin:0 auto 36px;text-align:center}
+.section-title{font-size:clamp(30px,4.6vw,48px);margin:.2rem 0 6px}
+.section-sub{color:#dcdcdc;opacity:.9;margin:0}
+
+/* ===== Features */
+.features{background:linear-gradient(180deg,#0a0b10 0%,#09090f 100%)}
+.feature-row{
+  display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;
+  padding:28px 0;
+}
+.feature-row.rev{grid-template-columns:.95fr 1.05fr}
+.feature-row.rev .shot{order:2}
+.feature-row.rev .copy{order:1}
+
+.feature-title{font-size:clamp(22px,3.2vw,34px);margin:0 0 10px}
+.muted{color:#e6e6e6;line-height:1.75;margin:0}
+
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.pill{
+  display:inline-block;padding:6px 12px;border-radius:999px;
+  background:rgba(108,99,255,.16);color:#cfc9ff;border:1px solid rgba(108,99,255,.35);
+  font-size:12px;letter-spacing:.02em
+}
+
+/* Device frame */
+.device{
+  position:relative;border-radius:28px;
+  padding:14px;background:
+    linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  box-shadow:
+    0 18px 50px rgba(0,0,0,.55),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.device:before{
+  content:"";position:absolute;left:50%;top:8px;transform:translateX(-50%);
+  width:22%;height:6px;border-radius:6px;background:rgba(255,255,255,.18);
+}
+.device img{
+  display:block;width:100%;height:auto;border-radius:20px;object-fit:cover;
+  box-shadow:0 8px 22px rgba(0,0,0,.45)
+}
+
+/* Feature image column sizing */
+.shot{max-width:720px}
+.copy{max-width:560px}
+
+/* Responsive */
+@media (max-width:1100px){
+  .feature-row,.feature-row.rev{grid-template-columns:1fr}
+  .feature-row.rev .shot{order:1}
+  .feature-row.rev .copy{order:2}
+  .shot,.copy{max-width:none}
+}
+@media (max-width:640px){
+  .features .section-head{margin-bottom:20px}
+  .feature-row{gap:28px}
+}
+
+.feature-title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: clamp(22px, 3.2vw, 34px);
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: #fff;
+}
+
+.feature-title .num {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--acc);
+  opacity: 0.9;
+  letter-spacing: 1px;
+  border: 1px solid rgba(108,99,255,0.4);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(108,99,255,0.08);
+  box-shadow: inset 0 0 10px rgba(108,99,255,0.25);
+}
+
+/* ===== How It Works (modern cinematic layout) ===== */
+/* ===== HOW IT WORKS (Journey Timeline) ===== */
+.how-journey {
+  background: radial-gradient(ellipse at top, #10111a 0%, #090a10 100%);
+  position: relative;
+}
+
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 120px;
+  margin-top: 80px;
+  padding: 0 4vw;
+}
+
+/* Glowing vertical connector line */
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(108,99,255,0.6) 0%, rgba(108,99,255,0.1) 100%);
+  box-shadow: 0 0 20px rgba(108,99,255,0.4);
+}
+
+.step-block {
+  position: relative;
+  text-align: center;
+  max-width: 880px;
+  width: 100%;
+}
+
+.step-num {
+  position: absolute;
+  left: 50%;
+  top: -70px;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(108,99,255,0.12);
+  border: 1px solid rgba(108,99,255,0.45);
+  color: var(--acc);
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 14px rgba(108,99,255,0.25);
+}
+
+.step-media {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6),
+              0 0 0 1px rgba(255,255,255,0.05);
+  margin-bottom: 24px;
+}
+
+.step-media img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.step-media:hover img {
+  transform: scale(1.04);
+}
+
+.step-content h3 {
+  font-size: clamp(22px, 2.6vw, 28px);
+  color: #fff;
+  margin: 10px 0;
+  font-weight: 700;
+}
+
+.step-content p {
+  color: #e0e0e0;
+  line-height: 1.8;
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 15px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .timeline {
+    gap: 80px;
+  }
+  .step-media img {
+    height: 260px;
+  }
+  .step-num {
+    width: 50px; height: 50px; font-size: 15px; top: -50px;
+  }
+}
+/* ===== Contact ===== */
+.contact{
+  background: radial-gradient(ellipse at bottom, #0f1020 0%, #090a10 60%, #09090f 100%);
+  text-align:center;
+  padding-bottom: 120px; /* extra breathing room */
+}
+
+.email-card{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin:28px auto 0;
+  padding:18px 26px;
+  border-radius:14px;
+  background:rgba(255,255,255,.04);
+  box-shadow:0 14px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.06);
+}
+
+.email{
+  font-weight:700;
+  color:#fff;
+  text-decoration:none;
+  letter-spacing:.2px;
+  transition:opacity .2s ease, text-shadow .2s ease;
+}
+
+.email:hover{
+  opacity:.95;
+  text-shadow:0 0 22px rgba(108,99,255,.55);
+}
+
+/* ===== Footer ===== */
+.footer{
+  border-top:1px solid rgba(255,255,255,.08);
+  background: #08080c;
+  color:#cfcfcf;
+}
+
+.footer-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:20px 6vw;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-size:14px;
+  opacity:.9;
+}
+
+.footer .dot{color:var(--acc); opacity:.9}
+
+/* small screens */
+@media (max-width:640px){
+  .email-card{padding:16px 20px}
+  .footer-inner{font-size:13px}
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- Top Nav -->
+<nav class="nav">
+  <a class="brand" href="#">Mura</a>
+  <span class="sp"></span>
+  <a class="hide-sm" href="#about">About</a>
+  <a class="hide-sm" href="#objectives">Objectives</a>
+  <a class="hide-sm" href="#features">Features</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero" aria-label="Mura VR hero">
+  <div>
+    <div class="kicker">VR Emotional Support Platform</div>
+    <h1 class="h1">Project <span class="dot">Mura.</span></h1>
+    <p class="lead">
+      A VR platform for nonverbal expression, reflective healing, and personalized emotional care—designed
+      for accessible self-awareness and private, stigma-free support.
+    </p>
+    <a class="btn" href="#learn">Learn More</a>
+  </div>
+
+</section>
+
+<!-- ===== About Section ===== -->
+<section id="about" class="about section">
+  <!-- Row 1: text | image -->
+  <div class="about-row">
+    <div class="about-text">
+      <p class="kicker lined">ABOUT</p>
+      <h2 class="about-title">Project Mura</h2>
+      <p>
+        A VR platform for nonverbal expression, reflective healing, and personalized emotional care.
+        It helps users move from internal emotion recognition to guided engagement in a responsive,
+        stigma-free environment.
+      </p>
+    </div>
+    <div class="about-media">
+      <img src="assets/sample1.jpg" alt="Immersive VR environment preview">
+    </div>
+  </div>
+
+  <div class="about-row rev">
+    <div class="about-media">
+      <img src="assets/sample2.jpg" alt="Emotion-adaptive scene">
+    </div>
+    <div class="about-text">
+      <p class="kicker lined">ABOUT</p>
+      <h2 class="about-title">Why It Matters</h2>
+      <p>
+        Designed for schools and wellness programs, Mura supports emotional literacy and private
+        reflection through calm spaces, guided meditations, and an optional companion mode for
+        supportive AI dialogue.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Features ===== -->
+<!-- ===== Features ===== -->
+<section id="features" class="section features">
+  <div class="section-head">
+    <p class="kicker">FEATURES</p>
+    <h2 class="section-title">Three Modes, One Journey</h2>
+    <p class="section-sub">Mura offers three distinct paths for emotional healing — Stillness, Meditation, and Companion — allowing users to explore in their own way, at their own pace.</p>
+  </div>
+
+  <!-- Feature 1 -->
+  <div class="feature-row">
+    <div class="shot">
+      <div class="device">
+        <img src="assets/sample1.jpg" alt="Stillness Mode screen">
+      </div>
+    </div>
+    <div class="copy">
+      <h3 class="feature-title"><span class="num">01</span> Stillness Mode</h3>
+      <p class="muted">
+        Enter a quiet, ambient environment designed for reflection and calm.  
+        Stillness Mode provides space to breathe and reset, free from guidance or dialogue.
+      </p>
+      <div class="pills">
+        <span class="pill">Silence</span><span class="pill">Focus</span><span class="pill">Calm</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 2 (reversed) -->
+  <div class="feature-row rev">
+    <div class="shot">
+      <div class="device">
+        <img src="assets/sample1.jpg" alt="Guided Meditation screen">
+      </div>
+    </div>
+    <div class="copy">
+      <h3 class="feature-title"><span class="num">02</span> Meditation Mode</h3>
+      <p class="muted">
+        Guided meditation sessions blend soothing narration, soundscapes, and visuals.  
+        Each experience adapts to your emotional check-in, helping you find balance and clarity.
+      </p>
+      <div class="pills">
+        <span class="pill">Narrated</span><span class="pill">Adaptive</span><span class="pill">Mindful</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 3 -->
+  <div class="feature-row">
+    <div class="shot">
+      <div class="device">
+        <img src="assets/sample1.jpg" alt="Companion Mode screen">
+      </div>
+    </div>
+    <div class="copy">
+      <h3 class="feature-title"><span class="num">03</span> Companion Mode</h3>
+      <p class="muted">
+        A conversational AI companion listens, reflects, and responds with empathy.  
+        It offers gentle prompts to explore emotions, fostering understanding without judgment.
+      </p>
+      <div class="pills">
+        <span class="pill">AI Dialogue</span><span class="pill">Empathy</span><span class="pill">Reflection</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== How It Works (Journey Timeline Layout) ===== -->
+<section id="how" class="section how-journey">
+  <div class="section-head text-center">
+    <p class="kicker lined">HOW IT WORKS</p>
+    <h2 class="section-title">Your Journey with Mura</h2>
+    <p class="section-sub">From the first emotional check-in to reflective closure — each stage unfolds naturally, guiding you through self-awareness and calm.</p>
+  </div>
+
+  <div class="timeline">
+    <!-- Step 1 -->
+    <div class="step-block">
+      <div class="step-num">01</div>
+      <div class="step-media">
+        <img src="assets/sample1.jpg" alt="Step 1 - Check-in">
+      </div>
+      <div class="step-content">
+        <h3>Emotional Check-In</h3>
+        <p>Begin by identifying your current feeling or intention. This moment of awareness sets the emotional tone for your experience.</p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-block">
+      <div class="step-num">02</div>
+      <div class="step-media">
+        <img src="assets/sample1.jpg" alt="Step 2 - Mode selection">
+      </div>
+      <div class="step-content">
+        <h3>Select Your Mode</h3>
+        <p>Choose <strong>Stillness</strong>, <strong>Meditation</strong>, or <strong>Companion</strong> mode — each tailored to your comfort and emotional needs.</p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-block">
+      <div class="step-num">03</div>
+      <div class="step-media">
+        <img src="assets/sample1.jpg" alt="Step 3 - Immersive environment">
+      </div>
+      <div class="step-content">
+        <h3>Immerse in the Space</h3>
+        <p>Enter a responsive VR environment that mirrors your emotions with sound, light, and gentle ambient motion.</p>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-block">
+      <div class="step-num">04</div>
+      <div class="step-media">
+        <img src="assets/sample1.jpg" alt="Step 4 - Interaction">
+      </div>
+      <div class="step-content">
+        <h3>Engage & Reflect</h3>
+        <p>Practice mindfulness or talk with the AI companion. Every action deepens your emotional clarity and understanding.</p>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-block">
+      <div class="step-num">05</div>
+      <div class="step-media">
+        <img src="assets/sample1.jpg" alt="Step 5 - Save moment">
+      </div>
+      <div class="step-content">
+        <h3>Save Your Moment</h3>
+        <p>Conclude with a reflection or simply take your calm with you. Mura saves your journey, ready for your next session.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Contact ===== -->
+<section id="contact" class="section contact">
+  <div class="section-head text-center">
+    <p class="kicker lined">CONTACT</p>
+    <h2 class="section-title">Get in Touch</h2>
+    <p class="section-sub">Have feedback or want to collaborate? I’d love to hear from you.</p>
+  </div>
+
+  <div class="email-card" role="contentinfo">
+    <a class="email" href="mailto:youremail@example.com">youremail@example.com</a>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© <span id="year"></span> Mura</span>
+  </div>
+</footer>
+
+<script>
+  // set current year in footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+
+</body>
+</html>
