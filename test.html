@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sample Dashboard · Project Landmine</title>
+
+<!-- Bootstrap & Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  background: #0a1222;
+  color: white !important;
+  font-family: 'Inter', sans-serif;
+  padding: 2rem;
+}
+h1 {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+h5,.card-header{
+  color:white !important;
+}
+.card {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+}
+.card-header {
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+hr {
+  border-color: rgba(255,255,255,.1);
+}
+canvas {
+  width: 100% !important;
+  height: 300px !important;
+}
+</style>
+</head>
+
+<body>
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Mission Dashboard</h1>
+    <button class="btn btn-warning text-dark fw-bold">Start Mission</button>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <h5>Detections</h5>
+        <h2 class="fw-bold text-warning">27</h2>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <h5>Markers</h5>
+        <h2 class="fw-bold text-info">19</h2>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <h5>Active UAVs</h5>
+        <h2 class="fw-bold text-success">4</h2>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <h5>Avg. Battery</h5>
+        <h2 class="fw-bold text-danger">68%</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">Detection Trend</div>
+        <div class="card-body">
+          <canvas id="lineChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">Battery Levels</div>
+        <div class="card-body">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mt-1">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">Marker Distribution</div>
+        <div class="card-body">
+          <canvas id="pieChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">Recent Activity</div>
+        <div class="card-body">
+          <ul class="list-unstyled mb-0">
+            <li>✅ <strong>Dome deployed</strong> at M-19 (14:03)</li>
+            <li>🛰 <strong>UAV-B route updated</strong> to Sector 3 (13:58)</li>
+            <li>⚠️ <strong>Signal spike</strong> near 35.118, 129.078 (13:46)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+// Line chart (detections over time)
+new Chart(document.getElementById('lineChart'), {
+  type: 'line',
+  data: {
+    labels: ['13:00', '13:10', '13:20', '13:30', '13:40', '13:50', '14:00'],
+    datasets: [{
+      label: 'Detections',
+      data: [5, 7, 10, 14, 18, 22, 27],
+      borderColor: '#ffd86a',
+      backgroundColor: 'rgba(255,216,106,0.25)',
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    scales: {
+      x: { ticks: { color: '#b7c3d9' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { ticks: { color: '#b7c3d9' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+    },
+    plugins: { legend: { labels: { color: '#fff' } } }
+  }
+});
+
+// Bar chart (battery levels)
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: ['UAV-A', 'UAV-B', 'UAV-C', 'UAV-D'],
+    datasets: [{
+      label: 'Battery (%)',
+      data: [64, 72, 53, 83],
+      backgroundColor: ['#ffd86a', '#93cfdb', '#ff8a54', '#22c55e']
+    }]
+  },
+  options: {
+    scales: {
+      x: { ticks: { color: '#b7c3d9' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { ticks: { color: '#b7c3d9' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+    },
+    plugins: { legend: { labels: { color: '#fff' } } }
+  }
+});
+
+// Doughnut chart (marker distribution)
+new Chart(document.getElementById('pieChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Cleared', 'Marked', 'Pending'],
+    datasets: [{
+      data: [40, 30, 15],
+      backgroundColor: ['#22c55e', '#ffd86a', '#ff8a54'],
+      borderColor: '#0a1222'
+    }]
+  },
+  options: {
+    plugins: {
+      legend: { position: 'bottom', labels: { color: '#fff' } }
+    }
+  }
+});
+</script>
+</body>
+</html>
